@@ -19,7 +19,12 @@
         <link media="screen" rel="stylesheet" type="text/css" href="css/site.css">
         <link rel="stylesheet" href="css/MarkerCluster.css" />
         <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
-  <body>
+  <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:750px; }
+</style>
+	</head>  
+<body>
     <div id="map"></div>
 
   <script type="text/javascript">
@@ -48,7 +53,7 @@ L.tileLayer(
     }).addTo(map);
 	  
             var markerLayer = Sheetsee.addMarkerLayer(geoJSON, map, "<h3>{{name}}</h3>", true)
-      }
+      })
     </script>
   </body>
 </html>
