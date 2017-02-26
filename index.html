@@ -2,50 +2,52 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script type="text/javascript" src="js/tabletop1.3.4.js"></script>
-    <script type="text/javascript" src="js/sheetsee.js"></script>
-    <link   type='text/css' rel='stylesheet' href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css'>
-    <!-- Add a Title -->
-    <title>Map</title>
-  </head>
-  <style>
-    html {width: 100%; height: 100%;}
-    body {width: 100%; height: 100%; margin: 0;}
-    /* How about a different background color? */
-    #map {width: 100%; height: 100%; background-color: #F7CE86;}
-    .leaflet-popup-content li {list-style:none;}
-    .leaflet-popup-content {width: 102px;}
-    .leaflet-popup-content img {width: 100px;}
-    a {border: none;}
-  </style>
+  <script type="text/javascript" src='js/jquery.js '></script>
+        <script type="text/javascript" src='js/tabletop1.3.4.js'></script>
+        <script type="text/javascript" src='js/sheetsee.js'></script>
+        <script type="text/javascript" src='js/leaflet.markercluster.js'></script>
+        <script src='https://api.mapbox.com/mapbox.js/v3.0.1/mapbox.js'></script>
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.js'></script>
+        <link rel="shortcut icon" href="https://raw.github.com/jlord/hack-spots/master/favico.png"/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.32.1/mapbox-gl.css' rel='stylesheet' />
+        <link href='https://api.tiles.mapbox.com/mapbox.js/v3.0.1/mapbox.css' rel='stylesheet' />
+        <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic'>
+        <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700'>
+        <link media="screen" rel="stylesheet" type="text/css" href="css/style.css">
+        <link media="screen" rel="stylesheet" type="text/css" href="css/site.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
   <body>
     <div id="map"></div>
 
-    <script type="text/javascript">
-      document.addEventListener('DOMContentLoaded', function() {
-        // see how what the example spreadsheet looks like:
-        // https://docs.google.com/spreadsheet/lv?key=0Ao5u1U6KYND7dGN5QngweVJUWE16bTRob0d2a3dCbnc
-        var URL = "https://docs.google.com/spreadsheets/d/1UgsLOmpLESc3r7-0K0OMcu03U0Ibxmg13G-Z_clHUt4/edit#gid=905239362"
-        Tabletop.init( { key: URL, callback: showInfo, simpleSheet: true } )
-      })
+  <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var gData
+            var URL = "1whsDOpBdn4IR6BHggiUZwelpnseThSjAR9yFPFEStMA"
+                Tabletop.init({ key: URL, callback: showInfo, simpleSheet: true })
+        })
 
       function showInfo(data) {
         // the column headers of the info you want in your popup
-        var optionsJSON = ["placename", "photo-url"]
-        // an html template for your popup
-        var template = "<ul><li><a href='{{photo-url}}' target='_blank'>"
-                     + "<img src='{{photo-url}}'></a></li>"
-                     + "<li><h4>{{placename}}</h4></li></ul>"
-        var geoJSON = Sheetsee.createGeoJSON(data, optionsJSON)
-        var map = Sheetsee.loadMap("map")
-        // Try different map tiles? examples.map-20v6611k
-        // examples.map-y7l23tes
-        // examples.map-h67hf2ic
-        // examples.map-i86nkdio
-        // examples.h186knp8
-        Sheetsee.addTileLayer(map, 'jllord.n7aml2bc')
-        Sheetsee.addMarkerLayer(geoJSON, map, template)
+        var optionsJSON = ["name", "address", "city", "rowNumber"]
+            var geoJSON = Sheetsee.createGeoJSON(gData, optionsJSON)
+            // create map, tilelayer (map background), markers and popups
+           L.mapbox.accessToken = 'pk.eyJ1Ijoic2hlbGQwNjExIiwiYSI6ImNpbjdvempkMDBmNTV0bWtzOHNpbmQ1bGsifQ.KK-SYSyL8hthLtb3SVLv4g';
+var map = L.map('map').setView([41.251799, -95.958462], 5);
+// Add tiles from Mapbox Style API (https://www.mapbox.com/developers/api/styles/)
+// Tiles are 512x512 pixels and are offset by 1 zoom level
+L.tileLayer(
+    'https://api.mapbox.com/styles/v1/sheld0611/ciyimt6dm00382smyek3ub7yl/tiles/256/{z}/{x}/{y}?access_token=' + L.mapbox.accessToken, {
+        tileSize: 512,
+        zoomOffset: -1,
+	maxZoom: 18,
+  	maxNativeZoom: 20,
+        attribution: '© <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+	  
+            var markerLayer = Sheetsee.addMarkerLayer(geoJSON, map, "<h3>{{name}}</h3>", true)
       }
     </script>
   </body>
